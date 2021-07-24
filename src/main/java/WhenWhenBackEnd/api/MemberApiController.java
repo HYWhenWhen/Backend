@@ -1,37 +1,35 @@
 package WhenWhenBackEnd.api;
 
+import WhenWhenBackEnd.domain.Member;
+import WhenWhenBackEnd.dto.member.CreateMemberRequestDTO;
+import WhenWhenBackEnd.dto.member.CreateMemberResponseDTO;
+import WhenWhenBackEnd.dto.member.LogInMemberRequestDTO;
+import WhenWhenBackEnd.dto.member.LogInMemberResponseDTO;
 import WhenWhenBackEnd.repository.MemberRepository;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.*;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class MemberApiController {
 
     private final MemberRepository memberRepository;
 
-    @PostMapping("/api/sign-up")
-    public CreateMemberResponse signUpMember(@RequestBody CreateMemberRequest request) {
+    @PostMapping("/sign-up")
+    public CreateMemberResponseDTO signUpMember(@RequestBody CreateMemberRequestDTO dto) {
+        Member member = new Member(dto.getIdToken(), dto.getNickName());
 
+        memberRepository.save(member);
+
+        return new CreateMemberResponseDTO(member.getIdToken(), member.getNickName());
     }
 
-    @GetMapping 조회용??
-    //
+    @PostMapping("/log-in")
+    public LogInMemberResponseDTO logInMember(@RequestBody LogInMemberRequestDTO dto) {
+        Member findMember = memberRepository.findByIdToken(dto.getIdToken());
 
-    @Data
-    static class CreateMemberRequest {
-
+        return new LogInMemberResponseDTO(findMember.getIdToken(), findMember.getNickName());
     }
-
-    @Data
-    static class CreateMemberResponse {
-
-    }
-
 
 }

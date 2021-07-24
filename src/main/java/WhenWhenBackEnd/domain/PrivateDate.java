@@ -29,8 +29,6 @@ public class PrivateDate {
 
     public PrivateDate(Member member, LocalDate localDate, Availability availability) {
         this.member = member;
-        member.getPrivateDateList().add(this);
-
         this.localDate = localDate;
         this.availability = availability;
     }

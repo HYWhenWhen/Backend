@@ -27,8 +27,6 @@ public class Date {
 
     public Date(MemberSchedule memberSchedule, LocalDate localDate, Availability availability) {
         this.memberSchedule = memberSchedule;
-        memberSchedule.getDateList().add(this);
-
         this.localDate = localDate;
         this.availability = availability;
     }

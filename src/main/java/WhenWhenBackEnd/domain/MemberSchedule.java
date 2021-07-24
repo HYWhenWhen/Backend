@@ -25,18 +25,11 @@ public class MemberSchedule {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    // 날짜 모음
-    @OneToMany(mappedBy = "memberSchedule", fetch = FetchType.LAZY)
-    private List<Date> dateList = new ArrayList<>();
-
     protected MemberSchedule() { }
 
     public MemberSchedule(Member member, Schedule schedule) {
         this.member = member;
-        member.getMemberScheduleList().add(this);
-
         this.schedule = schedule;
-        schedule.getMemberScheduleList().add(this);
     }
 
 }

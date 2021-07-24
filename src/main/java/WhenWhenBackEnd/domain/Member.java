@@ -22,14 +22,6 @@ public class Member {
     // 회원 닉네임
     private String nickName;
 
-    // 내 개인 일정 모음
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<PrivateDate> privateDateList = new ArrayList<>();
-
-    // 멤버 스케줄 모음
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<MemberSchedule> memberScheduleList = new ArrayList<>();
-
     protected Member() { }
 
     public Member(String idToken, String nickName) {

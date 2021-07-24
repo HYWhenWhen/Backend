@@ -22,7 +22,7 @@ public class Schedule {
     private String name;
 
     // 스케줄 랜덤 문자열 키
-    private String randomKey;
+    private String scheduleKey;
 
     // 주최자
     @OneToOne(fetch = FetchType.LAZY)
@@ -30,17 +30,14 @@ public class Schedule {
     private Member host;
 
     // 스케줄의 시작 날짜, 종료 날짜
-    private LocalDate startDate, endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     // 호스트가 지정한 인원 수
     private Long expectedMemberCnt;
 
     // 실제 설문 응시를 완료한 인원 수
     private Long joinedMemberCnt;
-
-    // 멤버 스케줄 모음
-    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
-    private List<MemberSchedule> memberScheduleList = new ArrayList<>();
 
     protected Schedule() { }
 
@@ -53,7 +50,7 @@ public class Schedule {
         this.joinedMemberCnt = 0L;
 
         // 랜덤 스트링 생성
-        this.randomKey = createRandomString();
+        this.scheduleKey = createRandomString();
     }
 
     private String createRandomString() {
