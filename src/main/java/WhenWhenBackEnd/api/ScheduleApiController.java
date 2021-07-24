@@ -2,12 +2,10 @@ package WhenWhenBackEnd.api;
 
 import WhenWhenBackEnd.domain.Member;
 import WhenWhenBackEnd.domain.Schedule;
-import WhenWhenBackEnd.dto.member.CreateMemberRequestDTO;
-import WhenWhenBackEnd.dto.member.CreateMemberResponseDTO;
-import WhenWhenBackEnd.dto.member.LogInMemberRequestDTO;
-import WhenWhenBackEnd.dto.member.LogInMemberResponseDTO;
 import WhenWhenBackEnd.dto.schedule.CreateScheduleRequestDTO;
 import WhenWhenBackEnd.dto.schedule.CreateScheduleResponseDTO;
+import WhenWhenBackEnd.dto.schedule.GetSubmitPageRequestDTO;
+import WhenWhenBackEnd.dto.schedule.GetSubmitPageResponseDTO;
 import WhenWhenBackEnd.repository.MemberRepository;
 import WhenWhenBackEnd.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +29,10 @@ public class ScheduleApiController {
         return new CreateScheduleResponseDTO(schedule.getName(), schedule.getScheduleKey());
     }
 
+    @PostMapping("/get-submit-page")
+    public GetSubmitPageResponseDTO createSchedule(@RequestBody GetSubmitPageRequestDTO dto) {
+        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+
+        return new GetSubmitPageResponseDTO(schedule.getName(),schedule.getScheduleKey(),schedule.getStartDate(),schedule.getEndDate());
+    }
 }
