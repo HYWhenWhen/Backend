@@ -30,7 +30,7 @@ public class ScheduleApiController {
     }
 
     @PostMapping("/get-submit-page")
-    public GetSubmitPageResponseDTO createSchedule(@RequestBody GetSubmitPageRequestDTO dto) {
+    public GetSubmitPageResponseDTO getSubmitPage(@RequestBody GetSubmitPageRequestDTO dto) {
         Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
 
         return new GetSubmitPageResponseDTO(schedule.getName(),schedule.getScheduleKey(),schedule.getStartDate(),schedule.getEndDate());
