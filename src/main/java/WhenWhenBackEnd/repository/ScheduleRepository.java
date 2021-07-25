@@ -1,15 +1,13 @@
 package WhenWhenBackEnd.repository;
 
-import WhenWhenBackEnd.domain.Member;
-import WhenWhenBackEnd.domain.QMember;
-import WhenWhenBackEnd.domain.QSchedule;
-import WhenWhenBackEnd.domain.Schedule;
+import WhenWhenBackEnd.domain.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -38,6 +36,19 @@ public class ScheduleRepository {
                 .fetchOne();
 
         return findSchedule;
+    }
+
+    public List<Schedule> findByMember(Member member) {
+        QSchedule schedule = QSchedule.schedule;
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+
+        List<Schedule> list = queryFactory
+                .select(schedule)
+                .from(memberSchedule)
+                .join(memberSchedule.schedule, schedule)
+                .where(memberSchedule.member.eq(member))
+                .fetch();
+        return list;
     }
 
 }

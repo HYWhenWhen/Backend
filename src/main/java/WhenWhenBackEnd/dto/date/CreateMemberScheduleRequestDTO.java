@@ -15,7 +15,7 @@ public class CreateMemberScheduleRequestDTO {
 
     private String scheduleKey;
     private String idToken;
-    private List<SimpleDateDTO> dates = new ArrayList<>(); // 미리 생성해놔야 한다 반드시!
+    private List<SimpleDateDTO> dates;
 
 }
 

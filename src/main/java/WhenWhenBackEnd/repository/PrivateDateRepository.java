@@ -27,7 +27,7 @@ public class PrivateDateRepository {
     }
 
     public List<PrivateDate> findByMember(Member member) {
-        QPrivateDate privateDate = QPrivateDate.privateDate;
+       QPrivateDate privateDate = QPrivateDate.privateDate;
 
         List<PrivateDate> result = queryFactory
                 .select(privateDate)

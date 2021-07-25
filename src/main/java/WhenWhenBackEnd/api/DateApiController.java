@@ -34,7 +34,7 @@ public class DateApiController {
 
         Member member = memberRepository.findByIdToken(dto.getIdToken());
         Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
-        schedule.addJoinedMemberCnt();
+        schedule.increaseJoinedMemberCnt();
 
         MemberSchedule memberSchedule = new MemberSchedule(member, schedule);
         memberScheduleRepository.save(memberSchedule);
@@ -47,19 +47,5 @@ public class DateApiController {
 
         return new CreateMemberScheduleResponseDTO(member.getIdToken(), member.getNickName());
     }
-
-//    @PostMapping("/abandon")
-//    public void abandonSchedule(@RequestBody AbandonScheduleRequestDTO dto) {
-//        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
-//        List<Long> memberScheduleIdList =
-//                memberScheduleRepository.findByMemberIdAndScheduleID(dto.getIdToken(), dto.getScheduleKey());
-//
-//        if (memberScheduleIdList.size() != 0) {
-//            memberScheduleIdList.forEach(memberScheduleId -> dateRepository.DeleteByMemberScheduleId(memberScheduleId));
-//            schedule.decreaseExpectedMemberCnt();
-//        }
-//
-//        schedule.decreaseJoinedMemberCnt();
-//    }
 
 }

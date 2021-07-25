@@ -1,21 +1,15 @@
 package WhenWhenBackEnd.api;
 
 import WhenWhenBackEnd.domain.Member;
+import WhenWhenBackEnd.domain.MemberSchedule;
 import WhenWhenBackEnd.domain.Schedule;
-import WhenWhenBackEnd.dto.schedule.AbandonScheduleRequestDTO;
-import WhenWhenBackEnd.dto.schedule.AbandonScheduleResponseDTO;
-import WhenWhenBackEnd.dto.schedule.CreateScheduleRequestDTO;
-import WhenWhenBackEnd.dto.schedule.CreateScheduleResponseDTO;
-import WhenWhenBackEnd.dto.schedule.GetSubmitPageRequestDTO;
-import WhenWhenBackEnd.dto.schedule.GetSubmitPageResponseDTO;
+import WhenWhenBackEnd.dto.schedule.*;
 import WhenWhenBackEnd.repository.DateRepository;
 import WhenWhenBackEnd.repository.MemberRepository;
 import WhenWhenBackEnd.repository.MemberScheduleRepository;
 import WhenWhenBackEnd.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,19 +37,24 @@ public class ScheduleApiController {
 
         return new GetSubmitPageResponseDTO(schedule.getName(),schedule.getScheduleKey(),schedule.getStartDate(),schedule.getEndDate());
     }
+
     @PostMapping("/abandon")
     public AbandonScheduleResponseDTO abandonSchedule(@RequestBody AbandonScheduleRequestDTO dto) {
+        Member member = memberRepository.findByIdToken(dto.getIdToken());
         Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
-        List<Long> memberScheduleIdList =
-                memberScheduleRepository.findByMemberIdAndScheduleID(dto.getIdToken(), dto.getScheduleKey());
 
-        if (memberScheduleIdList.size() != 0) {
-            memberScheduleIdList.forEach(memberScheduleId -> dateRepository.DeleteByMemberScheduleId(memberScheduleId));
+        MemberSchedule memberSchedule = memberScheduleRepository.findByMemberAndSchedule(member, schedule);
+
+        if (memberSchedule == null) {
+            schedule.decreaseExpectedMemberCnt();
+        }
+        else {
+            dateRepository.deleteByMemberSchedule(memberSchedule);
+            schedule.decreaseJoinedMemberCnt();
             schedule.decreaseExpectedMemberCnt();
         }
 
-        schedule.decreaseJoinedMemberCnt();
-
-        return new AbandonScheduleResponseDTO(dto.getIdToken(),dto.getScheduleKey());
+        return new AbandonScheduleResponseDTO(member.getIdToken(), schedule.getScheduleKey());
     }
+
 }

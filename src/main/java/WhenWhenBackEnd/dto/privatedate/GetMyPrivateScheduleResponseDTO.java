@@ -15,6 +15,6 @@ import java.util.List;
 public class GetMyPrivateScheduleResponseDTO {
 
     private String idToken;
-    private List<SimpleDateDTO2> dates = new ArrayList<>(); // 미리 생성해놔야 한다 반드시!
+    private List<SimpleDateDTO2> dates;
 
 }

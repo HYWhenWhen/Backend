@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import java.util.Optional;
 
 
-
 @Repository
 @Transactional
 public class MemberRepository {
@@ -25,9 +24,7 @@ public class MemberRepository {
         queryFactory = new JPAQueryFactory(em);
     }
 
-    public void save(Member member) {
-        em.persist(member);
-    }
+    public void save(Member member) { em.persist(member); }
 
     public Member findByIdToken(String idToken) {
         QMember member = QMember.member;

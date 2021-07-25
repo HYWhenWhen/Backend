@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AbandonScheduleResponseDTO {
-    String idToken;
-    String scheduleKey;
+
+    private String idToken;
+    private String scheduleKey;
+
 }

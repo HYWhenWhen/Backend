@@ -25,14 +25,15 @@ public class DateRepository {
         em.persist(date);
     }
 
-    public void DeleteByMemberScheduleId(Long memberScheduleId){
+    public Long deleteByMemberSchedule(MemberSchedule memberSchedule) {
         QDate date = QDate.date;
 
-        long deleteDate = queryFactory
+        Long execute = queryFactory
                 .delete(date)
-                .where(date.memberSchedule.id.eq(memberScheduleId))
+                .where(date.memberSchedule.eq(memberSchedule))
                 .execute();
-    }
 
+        return execute;
+    }
 
 }

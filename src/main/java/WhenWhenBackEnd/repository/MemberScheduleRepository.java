@@ -1,6 +1,9 @@
 package WhenWhenBackEnd.repository;
 
-import WhenWhenBackEnd.domain.*;
+import WhenWhenBackEnd.domain.Member;
+import WhenWhenBackEnd.domain.MemberSchedule;
+import WhenWhenBackEnd.domain.QMemberSchedule;
+import WhenWhenBackEnd.domain.Schedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,17 +29,19 @@ public class MemberScheduleRepository {
         em.persist(memberSchedule);
     }
 
-    public List<Long> findByMemberIdAndScheduleID(String idToken, String scheduleKey) {
+    public MemberSchedule findByMemberAndSchedule(Member member, Schedule schedule) {
         QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
 
-        List<Long> findMemberSchedule = queryFactory
-                .select(memberSchedule.id)
+        MemberSchedule result = queryFactory
+                .select(memberSchedule)
                 .from(memberSchedule)
-                .where(memberSchedule.member.idToken.eq(idToken))
-                .where(memberSchedule.schedule.scheduleKey.eq(scheduleKey))
-                .fetch();
+                .where(
+                    memberSchedule.member.eq(member)
+                    .and(memberSchedule.schedule.eq(schedule))
+                )
+                .fetchOne();
 
-        return findMemberSchedule;
+        return result;
     }
 
 }

@@ -68,19 +68,11 @@ public class Schedule {
         return generatedString.concat(String.valueOf(new Date().getTime()));
     }
 
-    public Long addJoinedMemberCnt() {
-        return ++joinedMemberCnt;
-    }
-
-    public Long decreaseJoinedMemberCnt() {
-        return --joinedMemberCnt;
-    }
-
-    public Long increaseExpectedMemberCnt() {
-        return ++expectedMemberCnt;
-    }
-
+    public Long increaseJoinedMemberCnt() { return ++joinedMemberCnt; }
+    public Long decreaseJoinedMemberCnt() { return --joinedMemberCnt; }
+    public Long increaseExpectedMemberCnt() { return ++expectedMemberCnt; }
     public Long decreaseExpectedMemberCnt() {
         return --expectedMemberCnt;
     }
+
 }

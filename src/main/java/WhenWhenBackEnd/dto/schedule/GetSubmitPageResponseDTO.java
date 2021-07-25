@@ -10,8 +10,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetSubmitPageResponseDTO {
-    String name;
-    String scheduleKey;
-    LocalDate startDate;
-    LocalDate EndDate;
+
+    private String scheduleName;
+    private String scheduleKey;
+    private LocalDate startDate;
+    private LocalDate EndDate;
+
 }
