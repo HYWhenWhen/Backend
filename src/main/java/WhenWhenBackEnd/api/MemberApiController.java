@@ -1,8 +1,6 @@
 package WhenWhenBackEnd.api;
 
 import WhenWhenBackEnd.domain.Member;
-import WhenWhenBackEnd.domain.PrivateDate;
-import WhenWhenBackEnd.domain.Schedule;
 import WhenWhenBackEnd.dto.SimpleDateDTO2;
 import WhenWhenBackEnd.dto.SimpleScheduleDTO;
 import WhenWhenBackEnd.dto.member.*;

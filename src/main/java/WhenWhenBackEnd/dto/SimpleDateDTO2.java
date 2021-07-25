@@ -1,6 +1,5 @@
 package WhenWhenBackEnd.dto;
 
-import WhenWhenBackEnd.domain.Availability;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

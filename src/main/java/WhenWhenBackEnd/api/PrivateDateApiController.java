@@ -1,9 +1,7 @@
 package WhenWhenBackEnd.api;
 
-import WhenWhenBackEnd.domain.Availability;
 import WhenWhenBackEnd.domain.Member;
 import WhenWhenBackEnd.domain.PrivateDate;
-import WhenWhenBackEnd.dto.SimpleDateDTO;
 import WhenWhenBackEnd.dto.SimpleDateDTO2;
 import WhenWhenBackEnd.dto.privatedate.GetMyPrivateScheduleRequestDTO;
 import WhenWhenBackEnd.dto.privatedate.GetMyPrivateScheduleResponseDTO;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.yaml.snakeyaml.scanner.ScannerImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;

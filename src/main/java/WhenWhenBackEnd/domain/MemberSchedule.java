@@ -3,8 +3,6 @@ package WhenWhenBackEnd.domain;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 // 다대다 관계인 멤버와 스케줄 관계를 다대일 관계 두개로 풀어내기 위한 클래스.
 // 회원 1명은 여러 개의 스케줄에 포함되어 있을 수 있고, 1개의 스케줄에는 여러 명의 회원이 들어갈 수 있다.

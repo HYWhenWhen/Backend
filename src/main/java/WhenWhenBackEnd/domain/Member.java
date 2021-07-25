@@ -3,8 +3,6 @@ package WhenWhenBackEnd.domain;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 // 회원
 @Entity @Table(name = "_member")
