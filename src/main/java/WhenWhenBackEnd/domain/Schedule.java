@@ -72,4 +72,15 @@ public class Schedule {
         return ++joinedMemberCnt;
     }
 
+    public Long decreaseJoinedMemberCnt() {
+        return --joinedMemberCnt;
+    }
+
+    public Long increaseExpectedMemberCnt() {
+        return ++expectedMemberCnt;
+    }
+
+    public Long decreaseExpectedMemberCnt() {
+        return --expectedMemberCnt;
+    }
 }

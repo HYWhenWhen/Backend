@@ -4,6 +4,7 @@ import WhenWhenBackEnd.domain.Date;
 import WhenWhenBackEnd.domain.Member;
 import WhenWhenBackEnd.domain.MemberSchedule;
 import WhenWhenBackEnd.domain.Schedule;
+import WhenWhenBackEnd.dto.AbandonScheduleRequestDTO;
 import WhenWhenBackEnd.dto.date.CreateMemberScheduleRequestDTO;
 import WhenWhenBackEnd.dto.date.CreateMemberScheduleResponseDTO;
 import WhenWhenBackEnd.repository.DateRepository;
@@ -46,6 +47,20 @@ public class DateApiController {
         dateList.stream().forEach(date -> dateRepository.save(date));
 
         return new CreateMemberScheduleResponseDTO(member.getIdToken(), member.getNickName());
+    }
+
+    @PostMapping("/abandon")
+    public void abandonSchedule(@RequestBody AbandonScheduleRequestDTO dto) {
+        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+        List<Long> memberScheduleIdList =
+                memberScheduleRepository.findByMemberIdAndScheduleID(dto.getIdToken(), dto.getScheduleKey());
+
+        if (memberScheduleIdList.size() != 0) {
+            memberScheduleIdList.forEach(memberScheduleId -> dateRepository.DeleteByMemberScheduleId(memberScheduleId));
+            schedule.decreaseExpectedMemberCnt();
+        }
+
+        schedule.decreaseJoinedMemberCnt();
     }
 
 }
