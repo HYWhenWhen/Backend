@@ -1,4 +1,4 @@
-package WhenWhenBackEnd.dto;
+package WhenWhenBackEnd.dto.schedule;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
