@@ -1,7 +1,6 @@
 package WhenWhenBackEnd.repository;
 
-import WhenWhenBackEnd.domain.Date;
-import WhenWhenBackEnd.domain.Member;
+import WhenWhenBackEnd.domain.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,5 +24,15 @@ public class DateRepository {
     public void save(Date date) {
         em.persist(date);
     }
+
+    public void DeleteByMemberScheduleId(Long memberScheduleId){
+        QDate date = QDate.date;
+
+        long deleteDate = queryFactory
+                .delete(date)
+                .where(date.memberSchedule.id.eq(memberScheduleId))
+                .execute();
+    }
+
 
 }
