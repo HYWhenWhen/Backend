@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -31,6 +32,55 @@ public class DateRepository {
         Long execute = queryFactory
                 .delete(date)
                 .where(date.memberSchedule.eq(memberSchedule))
+                .execute();
+
+        return execute;
+    }
+
+    public List<Date> findBySchedule(Schedule schedule) {
+        QDate date = QDate.date;
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+
+        List<Date> result = queryFactory
+                .select(date)
+                .from(date)
+                .join(date.memberSchedule, memberSchedule)
+                .on(memberSchedule.schedule.eq(schedule))
+                .fetch();
+
+        return result;
+    }
+
+    public List<Date> findByMember(Member param_member) {
+        QDate date = QDate.date;
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+
+        List<Date> result = queryFactory
+                .select(date)
+                .from(date)
+                .join(date.memberSchedule, memberSchedule)
+                .on(memberSchedule.member.eq(param_member))
+                .fetch();
+
+        return result;
+    }
+
+    public Long deleteBySchedule(Schedule param_schedule) {
+        QDate date = QDate.date;
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+        QSchedule schedule = QSchedule.schedule;
+
+        List<MemberSchedule> list = queryFactory
+                .select(memberSchedule)
+                .from(memberSchedule)
+                .where(memberSchedule.schedule.eq(param_schedule))
+                .fetch();
+
+        long execute = queryFactory
+                .delete(date)
+                .where(
+                        date.memberSchedule.in(list)
+                )
                 .execute();
 
         return execute;

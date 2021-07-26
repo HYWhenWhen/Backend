@@ -51,4 +51,15 @@ public class ScheduleRepository {
         return list;
     }
 
+    public Long delete(Schedule param_schedule) {
+        QSchedule schedule = QSchedule.schedule;
+
+        long execute = queryFactory
+                .delete(schedule)
+                .where(schedule.eq(param_schedule))
+                .execute();
+
+        return execute;
+    }
+
 }

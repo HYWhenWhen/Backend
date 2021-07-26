@@ -1,13 +1,14 @@
 package WhenWhenBackEnd.repository;
 
-import WhenWhenBackEnd.domain.Member;
-import WhenWhenBackEnd.domain.QMember;
+import WhenWhenBackEnd.domain.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
 
 @Repository
 @Transactional
@@ -34,6 +35,20 @@ public class MemberRepository {
                 .fetchOne();
 
         return findMember;
+    }
+
+    public List<Member> findBySchedule(Schedule param_schedule) {
+        QMember member = QMember.member;
+        QSchedule schedule = QSchedule.schedule;
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+
+        List<Member> result = queryFactory
+                .select(memberSchedule.member)
+                .from(memberSchedule)
+                .where(memberSchedule.schedule.eq(param_schedule))
+                .fetch();
+
+        return result;
     }
 
 }

@@ -24,7 +24,7 @@ public class Schedule {
 
     // 주최자
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "host_id")
     private Member host;
 
     // 스케줄의 시작 날짜, 종료 날짜

@@ -43,4 +43,15 @@ public class MemberScheduleRepository {
         return result;
     }
 
+    public Long deleteBySchedule(Schedule schedule) {
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+
+        long execute = queryFactory
+                .delete(memberSchedule)
+                .where(memberSchedule.schedule.eq(schedule))
+                .execute();
+
+        return execute;
+    }
+
 }
