@@ -85,5 +85,19 @@ public class DateRepository {
 
         return execute;
     }
+//    public Availability findAvailability(Date param_date, MemberSchedule param_memberSchedule){
+//        QDate date = QDate.date;
+//        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+//
+//        Availability availability = queryFactory
+//                .select(date.availability)
+//                .from(date)
+//                .where(
+//                        date.memberSchedule.eq(param_memberSchedule)
+//                                .and(date.localDate.eq(param_date.getLocalDate()))
+//                ).fetchOne();
+//
+//        return availability;
+//    }
 
 }

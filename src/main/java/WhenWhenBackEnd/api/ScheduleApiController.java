@@ -118,6 +118,38 @@ public class ScheduleApiController {
         return new GetTotalPageResponseDTO(schedule.getName(), schedule.getScheduleKey(), schedule.getStartDate(), schedule.getEndDate(), bestDates, dates, membersDates);
     }
 
+    @PostMapping("/get-result")
+    public GetResultResponseDTO getResult(@RequestBody GetResultRequestDTO dto) {
+        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+        List<Member> membersInSchedule = memberRepository.findBySchedule(schedule);
+
+        return new GetResultResponseDTO(membersInSchedule);
+    }
+//    @PostMapping("/get-result-of-days")
+//    public GetResultOfDaysResponseDTO getResultOfDays(@RequestBody GetResultOfDaysRequestDTO dto){
+//        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+//        List<Member> membersInSchedule = memberRepository.findBySchedule(schedule);
+//        List<Date> dateList = dateRepository.findBySchedule(schedule);
+//        List<List<Availability>> re_list = null;
+//        List<String> memberNames = null;
+//
+//        for(Date date : dateList){
+//            List<Availability> tmp_list = null;
+//            for(Member member : membersInSchedule){
+//                MemberSchedule memberSchedule = memberScheduleRepository.findByMemberAndSchedule(member,schedule);
+//                Availability availability = dateRepository.findAvailability(date,memberSchedule);
+//                tmp_list.add(availability);
+//            }
+//            re_list.add(tmp_list);
+//        }
+//
+//        for(Member member : membersInSchedule){
+//            memberNames.add(member.getNickName());
+//        }
+//        return new GetResultOfDaysResponseDTO(membersInSchedule);
+//        return new GetResultOfDaysResponseDTO(memberNames,re_list);
+//    }
+
 }
 
 
