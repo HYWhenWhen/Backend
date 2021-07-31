@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -85,19 +86,19 @@ public class DateRepository {
 
         return execute;
     }
-//    public Availability findAvailability(Date param_date, MemberSchedule param_memberSchedule){
-//        QDate date = QDate.date;
-//        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
-//
-//        Availability availability = queryFactory
-//                .select(date.availability)
-//                .from(date)
-//                .where(
-//                        date.memberSchedule.eq(param_memberSchedule)
-//                                .and(date.localDate.eq(param_date.getLocalDate()))
-//                ).fetchOne();
-//
-//        return availability;
-//    }
+    public Availability findAvailability(LocalDate param_local_date, MemberSchedule param_memberSchedule){
+        QDate date = QDate.date;
+        QMemberSchedule memberSchedule = QMemberSchedule.memberSchedule;
+
+        Availability availability = queryFactory
+                .select(date.availability)
+                .from(date)
+                .where(
+                        date.memberSchedule.eq(param_memberSchedule)
+                                .and(date.localDate.eq(param_local_date))
+                ).fetchOne();
+
+        return availability;
+    }
 
 }

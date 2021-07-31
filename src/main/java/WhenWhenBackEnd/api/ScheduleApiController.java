@@ -1,27 +1,28 @@
 package WhenWhenBackEnd.api;
 
-import WhenWhenBackEnd.domain.Date;
-import WhenWhenBackEnd.domain.Member;
-import WhenWhenBackEnd.domain.MemberSchedule;
-import WhenWhenBackEnd.domain.Schedule;
+import WhenWhenBackEnd.domain.*;
 import WhenWhenBackEnd.dto.SimpleDateDTO2;
 import WhenWhenBackEnd.dto.SimpleMemberInfoDTO;
 import WhenWhenBackEnd.dto.schedule.GetBestDayRequestDTO;
 import WhenWhenBackEnd.dto.schedule.GetBestDayResponseDTO;
 import WhenWhenBackEnd.dto.schedule.*;
 import WhenWhenBackEnd.logic.DetermineBestDate;
+import WhenWhenBackEnd.logic.ExtractResultDate;
 import WhenWhenBackEnd.logic.ExtractTotalDate;
+import WhenWhenBackEnd.logic.GetDatesOfRange;
 import WhenWhenBackEnd.repository.DateRepository;
 import WhenWhenBackEnd.repository.MemberRepository;
 import WhenWhenBackEnd.repository.MemberScheduleRepository;
 import WhenWhenBackEnd.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +48,7 @@ public class ScheduleApiController {
     public GetSubmitPageResponseDTO getSubmitPage(@RequestBody GetSubmitPageRequestDTO dto) {
         Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
 
-        return new GetSubmitPageResponseDTO(schedule.getName(),schedule.getScheduleKey(),schedule.getStartDate(),schedule.getEndDate());
+        return new GetSubmitPageResponseDTO(schedule.getName(), schedule.getScheduleKey(), schedule.getStartDate(), schedule.getEndDate());
     }
 
     @PostMapping("/abandon")
@@ -59,8 +60,7 @@ public class ScheduleApiController {
 
         if (memberSchedule == null) {
             schedule.decreaseExpectedMemberCnt();
-        }
-        else {
+        } else {
             dateRepository.deleteByMemberSchedule(memberSchedule);
             schedule.decreaseJoinedMemberCnt();
             schedule.decreaseExpectedMemberCnt();
@@ -122,34 +122,26 @@ public class ScheduleApiController {
     public GetResultResponseDTO getResult(@RequestBody GetResultRequestDTO dto) {
         Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
         List<Member> membersInSchedule = memberRepository.findBySchedule(schedule);
+        List<Date> bySchedule = dateRepository.findBySchedule(schedule);
 
-        return new GetResultResponseDTO(membersInSchedule);
+        List<SimpleDateDTO2> result = ExtractResultDate.get(schedule, bySchedule);
+        List<LocalDate> localDates = GetDatesOfRange.get(schedule);
+
+        List<List<SimpleDateDTO3>> result_of_days = new ArrayList<>();
+
+        for (LocalDate localDate : localDates) {
+            List<SimpleDateDTO3> availabilities = new ArrayList<>();
+
+            for (Member member : membersInSchedule) {
+                MemberSchedule memberSchedule = memberScheduleRepository.findByMemberAndSchedule(member, schedule);
+                Availability availability = dateRepository.findAvailability(localDate, memberSchedule);
+                SimpleDateDTO3 simpleDateDTO3 = new SimpleDateDTO3(member.getNickName(), availability.ordinal());
+                availabilities.add(simpleDateDTO3);
+            }
+            result_of_days.add(availabilities);
+        }
+        return new GetResultResponseDTO(localDates, result, result_of_days);
     }
-//    @PostMapping("/get-result-of-days")
-//    public GetResultOfDaysResponseDTO getResultOfDays(@RequestBody GetResultOfDaysRequestDTO dto){
-//        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
-//        List<Member> membersInSchedule = memberRepository.findBySchedule(schedule);
-//        List<Date> dateList = dateRepository.findBySchedule(schedule);
-//        List<List<Availability>> re_list = null;
-//        List<String> memberNames = null;
-//
-//        for(Date date : dateList){
-//            List<Availability> tmp_list = null;
-//            for(Member member : membersInSchedule){
-//                MemberSchedule memberSchedule = memberScheduleRepository.findByMemberAndSchedule(member,schedule);
-//                Availability availability = dateRepository.findAvailability(date,memberSchedule);
-//                tmp_list.add(availability);
-//            }
-//            re_list.add(tmp_list);
-//        }
-//
-//        for(Member member : membersInSchedule){
-//            memberNames.add(member.getNickName());
-//        }
-//        return new GetResultOfDaysResponseDTO(membersInSchedule);
-//        return new GetResultOfDaysResponseDTO(memberNames,re_list);
-//    }
-
 }
 
 

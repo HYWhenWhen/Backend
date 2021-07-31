@@ -80,9 +80,9 @@ public class DataLoader {
         privateDateRepository.save(privateDate17);
         privateDateRepository.save(privateDate18);
 
-        Schedule schedule1 = new Schedule("멋쟁이 사자처럼", member1, LocalDate.of(2017,9,30), LocalDate.of(2017, 10, 21), 4L);
-        Schedule schedule2 = new Schedule("한강 맥주", member2, LocalDate.of(2018, 3, 13), LocalDate.of(2018, 3, 25), 5L);
-        Schedule schedule3 = new Schedule("롯데월드", member3, LocalDate.of(2019,1,11), LocalDate.of(2019, 1, 24), 3L);
+        Schedule schedule1 = new Schedule("멋쟁이 사자처럼", member1, LocalDate.of(2017,9,30), LocalDate.of(2017, 10, 7), 4L);
+        Schedule schedule2 = new Schedule("한강 맥주", member2, LocalDate.of(2018, 3, 13), LocalDate.of(2018, 3, 20), 5L);
+        Schedule schedule3 = new Schedule("롯데월드", member3, LocalDate.of(2019,1,11), LocalDate.of(2019, 1, 16), 3L);
 
         scheduleRepository.save(schedule1);
         scheduleRepository.save(schedule2);
@@ -90,15 +90,68 @@ public class DataLoader {
 
         MemberSchedule memberSchedule1 = new MemberSchedule(member1, schedule1);
         MemberSchedule memberSchedule2 = new MemberSchedule(member2, schedule1);
+        MemberSchedule memberSchedule3 = new MemberSchedule(member1, schedule2);
 
         memberScheduleRepository.save(memberSchedule1);
         memberScheduleRepository.save(memberSchedule2);
+        memberScheduleRepository.save(memberSchedule3);
 
-        Date date1 = new Date(memberSchedule1, schedule1.getStartDate(), Availability.POSSIBLE);
-        Date date2 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(1L)), Availability.POSSIBLE);
+        //  schedule 1, member 1인 데이터들
+        Date s1Date1_1 = new Date(memberSchedule1, schedule1.getStartDate(), Availability.POSSIBLE);
+        Date s1Date1_2 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(1L)), Availability.POSSIBLE);
+        Date s1Date1_3 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(2L)), Availability.ADJUSTABLE);
+        Date s1Date1_4 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(3L)), Availability.POSSIBLE);
+        Date s1Date1_5 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(4L)), Availability.IMPOSSIBLE);
+        Date s1Date1_6 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(5L)), Availability.POSSIBLE);
+        Date s1Date1_7 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(6L)), Availability.POSSIBLE);
+        Date s1Date1_8 = new Date(memberSchedule1, LocalDate.from(schedule1.getStartDate().plusDays(7L)), Availability.IMPOSSIBLE);
 
-        dateRepository.save(date1);
-        dateRepository.save(date2);
+        // schedule 1, member 2인 데이터들
+        Date s1Date2_1 = new Date(memberSchedule2, schedule1.getStartDate(), Availability.POSSIBLE);
+        Date s1Date2_2 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(1L)), Availability.POSSIBLE);
+        Date s1Date2_3 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(2L)), Availability.ADJUSTABLE);
+        Date s1Date2_4 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(3L)), Availability.POSSIBLE);
+        Date s1Date2_5 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(4L)), Availability.IMPOSSIBLE);
+        Date s1Date2_6 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(5L)), Availability.IMPOSSIBLE);
+        Date s1Date2_7 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(6L)), Availability.IMPOSSIBLE);
+        Date s1Date2_8 = new Date(memberSchedule2, LocalDate.from(schedule1.getStartDate().plusDays(7L)), Availability.IMPOSSIBLE);
+
+        // schedule 2, member 1인 데이터들
+        Date s2Date1_1 = new Date(memberSchedule3, schedule1.getStartDate(), Availability.POSSIBLE);
+        Date s2Date1_2 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(1L)), Availability.POSSIBLE);
+        Date s2Date1_3 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(2L)), Availability.ADJUSTABLE);
+        Date s2Date1_4 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(3L)), Availability.POSSIBLE);
+        Date s2Date1_5 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(4L)), Availability.ADJUSTABLE);
+        Date s2Date1_6 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(5L)), Availability.IMPOSSIBLE);
+        Date s2Date1_7 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(6L)), Availability.IMPOSSIBLE);
+        Date s2Date1_8 = new Date(memberSchedule3, LocalDate.from(schedule2.getStartDate().plusDays(7L)), Availability.POSSIBLE);
+
+        dateRepository.save(s1Date1_1);
+        dateRepository.save(s1Date1_2);
+        dateRepository.save(s1Date1_3);
+        dateRepository.save(s1Date1_4);
+        dateRepository.save(s1Date1_5);
+        dateRepository.save(s1Date1_6);
+        dateRepository.save(s1Date1_7);
+        dateRepository.save(s1Date1_8);
+
+        dateRepository.save(s1Date2_1);
+        dateRepository.save(s1Date2_2);
+        dateRepository.save(s1Date2_3);
+        dateRepository.save(s1Date2_4);
+        dateRepository.save(s1Date2_5);
+        dateRepository.save(s1Date2_6);
+        dateRepository.save(s1Date2_7);
+        dateRepository.save(s1Date2_8);
+
+        dateRepository.save(s2Date1_1);
+        dateRepository.save(s2Date1_2);
+        dateRepository.save(s2Date1_3);
+        dateRepository.save(s2Date1_4);
+        dateRepository.save(s2Date1_5);
+        dateRepository.save(s2Date1_6);
+        dateRepository.save(s2Date1_7);
+        dateRepository.save(s2Date1_8);
     }
 
 }

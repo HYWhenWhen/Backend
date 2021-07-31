@@ -1,5 +1,6 @@
 package WhenWhenBackEnd.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 // 회원
 @Entity @Table(name = "_member")
 @Getter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Member {
 
     // DB 식별자
