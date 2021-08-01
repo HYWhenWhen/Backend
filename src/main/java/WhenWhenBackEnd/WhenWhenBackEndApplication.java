@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WhenWhenBackEndApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(WhenWhenBackEndApplication.class, args);
+
 	}
 
 }

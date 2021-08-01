@@ -1,16 +1,19 @@
 package WhenWhenBackEnd.dto.schedule;
 
-import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import WhenWhenBackEnd.domain.Schedule;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class CreateScheduleResponseDTO {
 
-    private String name;
     private String scheduleKey;
+    private Boolean success;
 
+    public CreateScheduleResponseDTO(Schedule schedule, Boolean success) {
+        if (success == true) {
+            this.scheduleKey = schedule.getScheduleKey();
+        }
+
+        this.success = success;
+    }
 }

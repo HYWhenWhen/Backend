@@ -1,36 +1,36 @@
 package WhenWhenBackEnd.domain;
 
-
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-// 회원 개인 소속 캘린더
-@Entity @Table(name = "_private_date")
+@Entity @Table(name = "_PRIVATE_DATE")
 @Getter
 public class PrivateDate {
 
-    // DB 식별자
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "private_date_id")
+    @Column(name = "PRIVATE_DATE_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     private LocalDate localDate;
 
-    @Enumerated(EnumType.STRING)
-    private Availability availability;
+    private String name;
 
-    protected PrivateDate() {}
+    // --------------------------------------------------------------------------- //
 
-    public PrivateDate(Member member, LocalDate localDate, Availability availability) {
+    protected PrivateDate() { }
+
+    public PrivateDate(Member member, LocalDate localDate, String name) {
         this.member = member;
         this.localDate = localDate;
-        this.availability = availability;
+        this.name = name;
     }
+
+    // --------------------------------------------------------------------------- //
 
 }
