@@ -3,8 +3,9 @@ package WhenWhenBackEnd.dto.member;
 import lombok.Data;
 
 @Data
-public class LogInMemberRequestDTO {
+public class AbandonRequestDTO {
 
     private String idToken;
+    private String scheduleKey;
 
 }

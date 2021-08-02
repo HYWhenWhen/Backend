@@ -1,16 +1,20 @@
 package WhenWhenBackEnd.dto.member;
 
-import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import WhenWhenBackEnd.domain.Member;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class LogInMemberResponseDTO {
 
-    private String idToken;
     private String nickName;
+    private Boolean success;
+
+    public LogInMemberResponseDTO(Member member, Boolean success) {
+        if (success == true) {
+            this.nickName = member.getNickName();
+        }
+
+        this.success = success;
+    }
 
 }

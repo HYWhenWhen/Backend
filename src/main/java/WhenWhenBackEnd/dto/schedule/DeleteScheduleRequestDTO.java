@@ -3,9 +3,9 @@ package WhenWhenBackEnd.dto.schedule;
 import lombok.Data;
 
 @Data
-public class GetSubmitPageRequestDTO {
+public class DeleteScheduleRequestDTO {
 
+    private String hostIdToken;
     private String scheduleKey;
-    private String idToken;
 
 }

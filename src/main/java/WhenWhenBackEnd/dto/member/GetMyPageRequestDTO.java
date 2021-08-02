@@ -3,7 +3,7 @@ package WhenWhenBackEnd.dto.member;
 import lombok.Data;
 
 @Data
-public class LogInMemberRequestDTO {
+public class GetMyPageRequestDTO {
 
     private String idToken;
 

@@ -2,10 +2,12 @@ package WhenWhenBackEnd.dto.schedule;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
-public class GetSubmitPageRequestDTO {
+public class GetResultPageModalRequestDTO {
 
     private String scheduleKey;
-    private String idToken;
+    private LocalDate date;
 
 }

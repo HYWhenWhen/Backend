@@ -1,17 +1,26 @@
 package WhenWhenBackEnd.dto.schedule;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import WhenWhenBackEnd.domain.Schedule;
+import lombok.Data;
 
 import java.time.LocalDate;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class GetSubmitPageResponseDTO {
-    String name;
-    String scheduleKey;
-    LocalDate startDate;
-    LocalDate EndDate;
+
+    private String scheduleName;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Boolean success;
+
+    public GetSubmitPageResponseDTO(Schedule schedule, Boolean success) {
+        if (success == true) {
+            this.scheduleName = schedule.getName();
+            this.startDate = schedule.getStartDate();
+            this.endDate = schedule.getEndDate();
+        }
+
+        this.success = success;
+    }
+
 }
