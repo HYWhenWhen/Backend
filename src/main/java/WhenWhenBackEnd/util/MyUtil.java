@@ -6,8 +6,6 @@ import WhenWhenBackEnd.domain.Member;
 import WhenWhenBackEnd.domain.Schedule;
 import WhenWhenBackEnd.dto.basic.SimpleDataDTO3;
 import WhenWhenBackEnd.dto.basic.SimpleDateDTO2;
-import WhenWhenBackEnd.dto.basic.SimpleMemberDTO;
-import org.springframework.data.util.Pair;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -90,17 +88,14 @@ public class MyUtil {
         for (Date date : dateList) {
             Member member = date.getMemberSchedule().getMember();
             Availability availability = date.getAvailability();
-//            Long availabilityToLong = new Long(availability.ordinal());
-            list.add(new SimpleDataDTO3(member.getNickName(), new Long(availability.ordinal())));
 
-            list.sort(new Comparator<SimpleDataDTO3>() {
-                @Override
-                public int compare(SimpleDataDTO3 arg0, SimpleDataDTO3 arg1) {
-                    String nickName0 = arg0.getNickName();
-                    String nickName1 = arg1.getNickName();
+            list.add(new SimpleDataDTO3(member.getNickName(), (long) availability.ordinal()));
 
-                    return nickName0.compareTo(nickName1);
-                }
+            list.sort((arg0, arg1) -> {
+                String nickName0 = arg0.getNickName();
+                String nickName1 = arg1.getNickName();
+
+                return nickName0.compareTo(nickName1);
             });
         }
 

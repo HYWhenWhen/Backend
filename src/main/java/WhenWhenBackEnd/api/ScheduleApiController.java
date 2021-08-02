@@ -3,7 +3,6 @@ package WhenWhenBackEnd.api;
 import WhenWhenBackEnd.domain.*;
 import WhenWhenBackEnd.dto.basic.SimpleDataDTO3;
 import WhenWhenBackEnd.dto.basic.SimpleDateDTO2;
-import WhenWhenBackEnd.dto.basic.SimpleMemberDTO;
 import WhenWhenBackEnd.dto.schedule.*;
 import WhenWhenBackEnd.service.DateService;
 import WhenWhenBackEnd.service.MemberScheduleService;

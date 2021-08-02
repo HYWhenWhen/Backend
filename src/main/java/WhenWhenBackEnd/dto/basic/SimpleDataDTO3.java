@@ -1,11 +1,16 @@
 package WhenWhenBackEnd.dto.basic;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class SimpleDataDTO3 {
-    String nickName;
-    Long availabilityToLong;
+
+    private String nickName;
+    private Long availabilityToLong;
+
+    public SimpleDataDTO3(String nickName, Long availabilityToLong) {
+        this.nickName = nickName;
+        this.availabilityToLong = availabilityToLong;
+    }
+
 }
