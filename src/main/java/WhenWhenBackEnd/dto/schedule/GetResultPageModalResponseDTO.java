@@ -1,6 +1,7 @@
 package WhenWhenBackEnd.dto.schedule;
 
 import WhenWhenBackEnd.domain.Availability;
+import WhenWhenBackEnd.dto.basic.SimpleDataDTO3;
 import WhenWhenBackEnd.dto.basic.SimpleMemberDTO;
 import lombok.Data;
 
@@ -11,10 +12,10 @@ import java.util.TreeMap;
 public class GetResultPageModalResponseDTO {
 
     private Boolean success;
-    TreeMap<Availability, List<SimpleMemberDTO>> availability;
+    List<SimpleDataDTO3> availability;
 
 
-    public GetResultPageModalResponseDTO(Boolean success, TreeMap<Availability, List<SimpleMemberDTO>> availability) {
+    public GetResultPageModalResponseDTO(Boolean success, List<SimpleDataDTO3> availability) {
         if (success == true) {
             this.availability = availability;
         }

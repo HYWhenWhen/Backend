@@ -4,14 +4,13 @@ import WhenWhenBackEnd.domain.Availability;
 import WhenWhenBackEnd.domain.Date;
 import WhenWhenBackEnd.domain.Member;
 import WhenWhenBackEnd.domain.Schedule;
+import WhenWhenBackEnd.dto.basic.SimpleDataDTO3;
 import WhenWhenBackEnd.dto.basic.SimpleDateDTO2;
 import WhenWhenBackEnd.dto.basic.SimpleMemberDTO;
+import org.springframework.data.util.Pair;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 public class MyUtil {
 
@@ -68,21 +67,44 @@ public class MyUtil {
         return map;
     }
 
-    public static TreeMap<Availability, List<SimpleMemberDTO>> getResultAvailability(List<Date> dateList) {
-        TreeMap<Availability, List<SimpleMemberDTO>> map = new TreeMap<>();
+//    public static TreeMap<Availability, List<SimpleMemberDTO>> getResultAvailability(List<Date> dateList) {
+//        TreeMap<Availability, List<SimpleMemberDTO>> map = new TreeMap<>();
+//
+//        map.put(Availability.POSSIBLE, new ArrayList<>());
+//        map.put(Availability.ADJUSTABLE, new ArrayList<>());
+//        map.put(Availability.IMPOSSIBLE, new ArrayList<>());
+//
+//        for (Date date : dateList) {
+//            Availability availability = date.getAvailability();
+//            Member member = date.getMemberSchedule().getMember();
+//
+//            map.get(availability).add(new SimpleMemberDTO(member.getIdToken(), member.getNickName()));
+//        }
+//
+//        return map;
+//    }
 
-        map.put(Availability.POSSIBLE, new ArrayList<>());
-        map.put(Availability.ADJUSTABLE, new ArrayList<>());
-        map.put(Availability.IMPOSSIBLE, new ArrayList<>());
+    public static List<SimpleDataDTO3> getResultAvailability(List<Date> dateList){
+        List<SimpleDataDTO3> list = new ArrayList<>();
 
         for (Date date : dateList) {
-            Availability availability = date.getAvailability();
             Member member = date.getMemberSchedule().getMember();
+            Availability availability = date.getAvailability();
+//            Long availabilityToLong = new Long(availability.ordinal());
+            list.add(new SimpleDataDTO3(member.getNickName(), new Long(availability.ordinal())));
 
-            map.get(availability).add(new SimpleMemberDTO(member.getIdToken(), member.getNickName()));
+            list.sort(new Comparator<SimpleDataDTO3>() {
+                @Override
+                public int compare(SimpleDataDTO3 arg0, SimpleDataDTO3 arg1) {
+                    String nickName0 = arg0.getNickName();
+                    String nickName1 = arg1.getNickName();
+
+                    return nickName0.compareTo(nickName1);
+                }
+            });
         }
 
-        return map;
+        return list;
     }
 
 }

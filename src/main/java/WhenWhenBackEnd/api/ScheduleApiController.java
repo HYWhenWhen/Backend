@@ -1,6 +1,7 @@
 package WhenWhenBackEnd.api;
 
 import WhenWhenBackEnd.domain.*;
+import WhenWhenBackEnd.dto.basic.SimpleDataDTO3;
 import WhenWhenBackEnd.dto.basic.SimpleDateDTO2;
 import WhenWhenBackEnd.dto.basic.SimpleMemberDTO;
 import WhenWhenBackEnd.dto.schedule.*;
@@ -103,6 +104,21 @@ public class ScheduleApiController {
                 schedule.getEndDate(), schedule.getExpectedMemberCnt(), schedule.getJoinedMemberCnt(), dates);
     }
 
+//    @PostMapping("/get-result-page-modal")
+//    public GetResultPageModalResponseDTO getResultPageModal(@RequestBody GetResultPageModalRequestDTO dto) {
+//        Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
+//        LocalDate localDate = dto.getDate();
+//
+//        if(schedule == null) return new GetResultPageModalResponseDTO(false, null);
+//        if(localDate.isBefore(schedule.getStartDate()) || localDate.isAfter(schedule.getEndDate()))
+//            return new GetResultPageModalResponseDTO(false, null);
+//
+//        List<Date> dateList = dateService.findByScheduleAndDateWithMembers(schedule, localDate);
+//
+//        TreeMap<Availability, List<SimpleMemberDTO>> availability = MyUtil.getResultAvailability(dateList);
+//
+//        return new GetResultPageModalResponseDTO(true, availability);
+//    }
     @PostMapping("/get-result-page-modal")
     public GetResultPageModalResponseDTO getResultPageModal(@RequestBody GetResultPageModalRequestDTO dto) {
         Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
@@ -114,7 +130,7 @@ public class ScheduleApiController {
 
         List<Date> dateList = dateService.findByScheduleAndDateWithMembers(schedule, localDate);
 
-        TreeMap<Availability, List<SimpleMemberDTO>> availability = MyUtil.getResultAvailability(dateList);
+        List<SimpleDataDTO3> availability = MyUtil.getResultAvailability(dateList);
 
         return new GetResultPageModalResponseDTO(true, availability);
     }
