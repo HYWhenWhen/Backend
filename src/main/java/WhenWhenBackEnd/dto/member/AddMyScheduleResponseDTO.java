@@ -3,11 +3,11 @@ package WhenWhenBackEnd.dto.member;
 import lombok.Data;
 
 @Data
-public class CreateMemberResponseDTO {
+public class AddMyScheduleResponseDTO {
 
     private Boolean success;
 
-    public CreateMemberResponseDTO(Boolean success) {
+    public AddMyScheduleResponseDTO(Boolean success) {
         this.success = success;
     }
 

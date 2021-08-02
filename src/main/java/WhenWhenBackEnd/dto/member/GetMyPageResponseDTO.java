@@ -1,22 +1,24 @@
 package WhenWhenBackEnd.dto.member;
 
-import WhenWhenBackEnd.dto.SimpleDateDTO2;
-import WhenWhenBackEnd.dto.SimpleScheduleDTO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import WhenWhenBackEnd.dto.basic.SimpleScheduleDTO;
+import WhenWhenBackEnd.dto.basic.SimpleScheduleDTO2;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class GetMyPageResponseDTO {
 
-    private String idToken;
-    private String nickName;
+    List<SimpleScheduleDTO> dates;
+    List<SimpleScheduleDTO2> schedules;
+    Boolean success;
 
-    List<SimpleDateDTO2> dates;
-    List<SimpleScheduleDTO> schedules;
+    public GetMyPageResponseDTO(List<SimpleScheduleDTO> dates, List<SimpleScheduleDTO2> schedules, Boolean success) {
+        if (success == true) {
+            this.dates = dates;
+            this.schedules = schedules;
+        }
 
+        this.success = success;
+    }
 }

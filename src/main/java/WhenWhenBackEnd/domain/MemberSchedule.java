@@ -4,24 +4,23 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-// 다대다 관계인 멤버와 스케줄 관계를 다대일 관계 두개로 풀어내기 위한 클래스.
-// 회원 1명은 여러 개의 스케줄에 포함되어 있을 수 있고, 1개의 스케줄에는 여러 명의 회원이 들어갈 수 있다.
-// 특정 회원이 자신이 들어가 있는 스케줄을 조회하거나, 특정 스케줄이 자신이 포함하고 있는 회원을 조회할 때 이 테이블과 조인 쿼리를 하면 된다.
-@Entity @Table(name = "_member_schedule")
+@Entity @Table(name = "_MEMBER_SCHEDULE")
 @Getter
 public class MemberSchedule {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_schedule_id")
+    @Column(name = "MEMBER_SCHEDULE_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
+    @JoinColumn(name = "SCHEDULE_ID")
     private Schedule schedule;
+
+    // --------------------------------------------------------------------------- //
 
     protected MemberSchedule() { }
 
@@ -29,5 +28,7 @@ public class MemberSchedule {
         this.member = member;
         this.schedule = schedule;
     }
+
+    // --------------------------------------------------------------------------- //
 
 }

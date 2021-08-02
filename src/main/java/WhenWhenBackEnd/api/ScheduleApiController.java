@@ -1,147 +1,122 @@
 package WhenWhenBackEnd.api;
 
 import WhenWhenBackEnd.domain.*;
-import WhenWhenBackEnd.dto.SimpleDateDTO2;
-import WhenWhenBackEnd.dto.SimpleMemberInfoDTO;
-import WhenWhenBackEnd.dto.schedule.GetBestDayRequestDTO;
-import WhenWhenBackEnd.dto.schedule.GetBestDayResponseDTO;
+import WhenWhenBackEnd.dto.basic.SimpleDateDTO2;
+import WhenWhenBackEnd.dto.basic.SimpleMemberDTO;
 import WhenWhenBackEnd.dto.schedule.*;
-import WhenWhenBackEnd.logic.DetermineBestDate;
-import WhenWhenBackEnd.logic.ExtractResultDate;
-import WhenWhenBackEnd.logic.ExtractTotalDate;
-import WhenWhenBackEnd.logic.GetDatesOfRange;
-import WhenWhenBackEnd.repository.DateRepository;
-import WhenWhenBackEnd.repository.MemberRepository;
-import WhenWhenBackEnd.repository.MemberScheduleRepository;
-import WhenWhenBackEnd.repository.ScheduleRepository;
+import WhenWhenBackEnd.service.DateService;
+import WhenWhenBackEnd.service.MemberScheduleService;
+import WhenWhenBackEnd.service.MemberService;
+import WhenWhenBackEnd.service.ScheduleService;
+import WhenWhenBackEnd.util.MyUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ScheduleApiController {
 
-    private final MemberRepository memberRepository;
-    private final ScheduleRepository scheduleRepository;
-    private final MemberScheduleRepository memberScheduleRepository;
-    private final DateRepository dateRepository;
+    private final ScheduleService scheduleService;
+    private final MemberService memberService;
+    private final MemberScheduleService memberScheduleService;
+    private final DateService dateService;
 
     @PostMapping("/create-schedule")
-    public CreateScheduleResponseDTO createSchedule(@RequestBody CreateScheduleRequestDTO dto) {
-        Member host = memberRepository.findByIdToken(dto.getHostIdToken());
-        Schedule schedule = new Schedule(dto.getName(), host, dto.getStartDate(), dto.getEndDate(), dto.getExpectedMemberCnt());
+    public CreateScheduleResponseDTO create(@RequestBody CreateScheduleRequestDTO dto) {
+        Member host = memberService.findOne(dto.getHostIdToken());
 
-        scheduleRepository.save(schedule);
+        Schedule schedule = new Schedule(dto.getScheduleName(), host, dto.getStartDate(), dto.getEndDate(), dto.getExpectedMemberCnt());
 
-        return new CreateScheduleResponseDTO(schedule.getName(), schedule.getScheduleKey());
+        Boolean success = scheduleService.save(schedule);
+
+        return new CreateScheduleResponseDTO(schedule, success);
     }
 
     @PostMapping("/get-submit-page")
     public GetSubmitPageResponseDTO getSubmitPage(@RequestBody GetSubmitPageRequestDTO dto) {
-        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+        Member member = memberService.findOne(dto.getIdToken());
+        Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
 
-        return new GetSubmitPageResponseDTO(schedule.getName(), schedule.getScheduleKey(), schedule.getStartDate(), schedule.getEndDate());
+        if(member == null || schedule == null)
+            return new GetSubmitPageResponseDTO(null, false);
+
+        return new GetSubmitPageResponseDTO(schedule, true);
     }
 
-    @PostMapping("/abandon")
-    public AbandonScheduleResponseDTO abandonSchedule(@RequestBody AbandonScheduleRequestDTO dto) {
-        Member member = memberRepository.findByIdToken(dto.getIdToken());
-        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+    @PostMapping("/submit/member-schedule")
+    public SubmitMemberScheduleResponseDTO submit(@RequestBody SubmitMemberScheduleRequestDTO dto) {
+        Member member = memberService.findOne(dto.getIdToken());
+        Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
 
-        MemberSchedule memberSchedule = memberScheduleRepository.findByMemberAndSchedule(member, schedule);
+        if(member == null || schedule == null)
+            return new SubmitMemberScheduleResponseDTO(false);
 
-        if (memberSchedule == null) {
-            schedule.decreaseExpectedMemberCnt();
-        } else {
-            dateRepository.deleteByMemberSchedule(memberSchedule);
-            schedule.decreaseJoinedMemberCnt();
-            schedule.decreaseExpectedMemberCnt();
-        }
+        MemberSchedule memberSchedule = new MemberSchedule(member, schedule);
+        memberScheduleService.save(memberSchedule);
 
-        return new AbandonScheduleResponseDTO(member.getIdToken(), schedule.getScheduleKey());
+        List<Date> dateList = dto.getDates().stream()
+                .filter(dateDTO -> dateDTO.getLocalDate().isAfter(schedule.getStartDate()) && dateDTO.getLocalDate().isBefore(schedule.getEndDate()))
+                .map(dateDTO -> new Date(memberSchedule, dateDTO.getLocalDate(), dateDTO.getAvailability()))
+                .collect(Collectors.toList());
+
+        dateService.saveAll(dateList);
+
+        return new SubmitMemberScheduleResponseDTO(true);
     }
 
     @PostMapping("/delete-schedule")
     public DeleteScheduleResponseDTO deleteSchedule(@RequestBody DeleteScheduleRequestDTO dto) {
-        Member host = memberRepository.findByIdToken(dto.getHostIdToken());
-        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+        Member host = memberService.findOne(dto.getHostIdToken());
+        Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
 
-        dateRepository.deleteBySchedule(schedule);
-        memberScheduleRepository.deleteBySchedule(schedule);
-        scheduleRepository.delete(schedule);
+        if(host == null || schedule == null)
+            return new DeleteScheduleResponseDTO(false);
 
-        return new DeleteScheduleResponseDTO(host.getIdToken());
+        if(schedule.getHost() != host)return new DeleteScheduleResponseDTO(false);
+
+        dateService.deleteBySchedule(schedule);
+        memberScheduleService.deleteBySchedule(schedule);
+        scheduleService.delete(schedule);
+
+        return new DeleteScheduleResponseDTO(true);
     }
 
-    @PostMapping("/get-best-day")
-    public GetBestDayResponseDTO getBestDay(@RequestBody GetBestDayRequestDTO dto) {
-        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
+    @PostMapping("/get-result-page")
+    public GetResultPageResponseDTO getResultPage(@RequestBody GetResultPageRequestDTO dto) {
+        Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
 
-        List<Date> dateList = dateRepository.findBySchedule(schedule);
+        if(schedule == null)
+            return new GetResultPageResponseDTO(false, null, null, null, null, null, null);
 
-        List<LocalDate> bestDates = DetermineBestDate.get(schedule, dateList);
+        List<Date> dateList = dateService.findBySchedule(schedule);
 
-        return new GetBestDayResponseDTO(schedule.getScheduleKey(), bestDates);
+        TreeMap<LocalDate, SimpleDateDTO2> dates = MyUtil.getResultDates(schedule, dateList);
+
+        return new GetResultPageResponseDTO(true, schedule.getName(), schedule.getStartDate(),
+                schedule.getEndDate(), schedule.getExpectedMemberCnt(), schedule.getJoinedMemberCnt(), dates);
     }
 
-    @PostMapping("/get-total-page")
-    public GetTotalPageResponseDTO getTotalPage(@RequestBody GetTotalPageRequestDTO dto) {
-        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
-        List<Date> dateList = dateRepository.findBySchedule(schedule);
+    @PostMapping("/get-result-page-modal")
+    public GetResultPageModalResponseDTO getResultPageModal(@RequestBody GetResultPageModalRequestDTO dto) {
+        Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
+        LocalDate localDate = dto.getDate();
 
-        List<LocalDate> bestDates = DetermineBestDate.get(schedule, dateList);
-        List<SimpleDateDTO2> dates = ExtractTotalDate.get(schedule, dateList);
+        if(schedule == null) return new GetResultPageModalResponseDTO(false, null);
+        if(localDate.isBefore(schedule.getStartDate()) || localDate.isAfter(schedule.getEndDate()))
+            return new GetResultPageModalResponseDTO(false, null);
 
-        List<Member> membersInSchedule = memberRepository.findBySchedule(schedule);
+        List<Date> dateList = dateService.findByScheduleAndDateWithMembers(schedule, localDate);
 
-        List<SimpleMemberInfoDTO> membersDates = new ArrayList<>();
+        TreeMap<Availability, List<SimpleMemberDTO>> availability = MyUtil.getResultAvailability(dateList);
 
-        for (Member member : membersInSchedule) {
-            List<Date> dateList1 = dateRepository.findByMember(member);
-            List<SimpleDateDTO2> simpleDateDTO2List = dateList1.stream()
-                    .map(date -> new SimpleDateDTO2(date.getLocalDate(), date.getAvailability().ordinal()))
-                    .collect(Collectors.toList());
-
-            SimpleMemberInfoDTO info = new SimpleMemberInfoDTO(member.getIdToken(), member.getNickName(), simpleDateDTO2List);
-
-            membersDates.add(info);
-        }
-
-        return new GetTotalPageResponseDTO(schedule.getName(), schedule.getScheduleKey(), schedule.getStartDate(), schedule.getEndDate(), bestDates, dates, membersDates);
+        return new GetResultPageModalResponseDTO(true, availability);
     }
 
-    @PostMapping("/get-result")
-    public GetResultResponseDTO getResult(@RequestBody GetResultRequestDTO dto) {
-        Schedule schedule = scheduleRepository.findByScheduleKey(dto.getScheduleKey());
-        List<Member> membersInSchedule = memberRepository.findBySchedule(schedule);
-        List<Date> bySchedule = dateRepository.findBySchedule(schedule);
-
-        List<SimpleDateDTO2> result = ExtractResultDate.get(schedule, bySchedule);
-        List<LocalDate> localDates = GetDatesOfRange.get(schedule);
-
-        List<List<SimpleDateDTO3>> result_of_days = new ArrayList<>();
-
-        for (LocalDate localDate : localDates) {
-            List<SimpleDateDTO3> availabilities = new ArrayList<>();
-
-            for (Member member : membersInSchedule) {
-                MemberSchedule memberSchedule = memberScheduleRepository.findByMemberAndSchedule(member, schedule);
-                Availability availability = dateRepository.findAvailability(localDate, memberSchedule);
-                SimpleDateDTO3 simpleDateDTO3 = new SimpleDateDTO3(member.getNickName(), availability.ordinal());
-                availabilities.add(simpleDateDTO3);
-            }
-            result_of_days.add(availabilities);
-        }
-        return new GetResultResponseDTO(localDates, result, result_of_days);
-    }
 }
-
-

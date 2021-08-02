@@ -1,17 +1,13 @@
 package WhenWhenBackEnd.dto.schedule;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDate;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class CreateScheduleRequestDTO {
 
-    private String name;
+    private String scheduleName;
     private Long expectedMemberCnt;
     private String hostIdToken;
     private LocalDate startDate;

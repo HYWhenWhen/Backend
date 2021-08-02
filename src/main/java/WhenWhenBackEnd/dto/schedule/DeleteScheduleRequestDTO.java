@@ -1,12 +1,8 @@
 package WhenWhenBackEnd.dto.schedule;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class DeleteScheduleRequestDTO {
 
     private String hostIdToken;

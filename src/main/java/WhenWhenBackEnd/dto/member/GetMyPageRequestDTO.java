@@ -1,12 +1,8 @@
 package WhenWhenBackEnd.dto.member;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class GetMyPageRequestDTO {
 
     private String idToken;
