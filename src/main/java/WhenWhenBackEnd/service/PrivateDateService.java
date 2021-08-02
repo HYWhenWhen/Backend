@@ -31,4 +31,14 @@ public class PrivateDateService {
 
         return list;
     }
+
+    public PrivateDate findOne(Long id) {
+        PrivateDate result = privateDateRepository.findById(id);
+
+        return result;
+    }
+
+    public void delete(PrivateDate privateDate) {
+        privateDateRepository.delete(privateDate);
+    }
 }

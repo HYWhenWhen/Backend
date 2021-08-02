@@ -31,6 +31,12 @@ public class PrivateDateRepository {
         em.persist(_privateDate);
     }
 
+    public PrivateDate findById(Long id) {
+        PrivateDate privateDate = em.find(PrivateDate.class, id);
+
+        return privateDate;
+    }
+
     public List<PrivateDate> findByMember(Member _member) {
         List<PrivateDate> result = queryFactory
                 .select(privateDate)
@@ -39,6 +45,10 @@ public class PrivateDateRepository {
                 .fetch();
 
         return result;
+    }
+
+    public void delete(PrivateDate privateDate) {
+        em.remove(privateDate);
     }
 
 }

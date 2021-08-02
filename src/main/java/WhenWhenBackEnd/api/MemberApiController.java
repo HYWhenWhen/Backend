@@ -4,8 +4,8 @@ import WhenWhenBackEnd.domain.Member;
 import WhenWhenBackEnd.domain.MemberSchedule;
 import WhenWhenBackEnd.domain.PrivateDate;
 import WhenWhenBackEnd.domain.Schedule;
+import WhenWhenBackEnd.dto.basic.SimpleMyScheduleDTO;
 import WhenWhenBackEnd.dto.basic.SimpleScheduleDTO;
-import WhenWhenBackEnd.dto.basic.SimpleScheduleDTO2;
 import WhenWhenBackEnd.dto.member.*;
 import WhenWhenBackEnd.service.*;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +52,27 @@ public class MemberApiController {
         if(member == null)
             return new AddMyScheduleResponseDTO(false);
 
-        List<PrivateDate> list = dto.getDates().stream()
-                .map(simpleSchedule -> new PrivateDate(member, simpleSchedule.getLocalDate(), simpleSchedule.getScheduleName()))
-                .collect(Collectors.toList());
+        LocalDate localDate = dto.getLocalDate();
+        String scheduleName = dto.getScheduleName();
 
-        privateDateService.saveAll(list);
+        PrivateDate privateDate = new PrivateDate(member, localDate, scheduleName);
+
+        privateDateService.save(privateDate);
 
         return new AddMyScheduleResponseDTO(true);
+    }
+
+    @PostMapping("/delete-my-schedule")
+    public DeleteMyScheduleResponseDTO deleteMySchedule(@RequestBody DeleteMyScheduleRequestDTO dto) {
+        Member member = memberService.findOne(dto.getIdToken());
+
+        PrivateDate privateDate = privateDateService.findOne(dto.getScheduleKey());
+
+        if(member == null || privateDate.getMember() != member)return new DeleteMyScheduleResponseDTO(false);
+
+        privateDateService.delete(privateDate);
+
+        return new DeleteMyScheduleResponseDTO(true);
     }
 
     @PostMapping("/get-my-schedule")
@@ -85,8 +99,8 @@ public class MemberApiController {
 
         List<PrivateDate> privateDateList = privateDateService.findByMember(member);
 
-        List<SimpleScheduleDTO> simpleScheduleDTOList = privateDateList.stream()
-                .map(privateDate -> new SimpleScheduleDTO(privateDate.getName(), privateDate.getLocalDate()))
+        List<SimpleMyScheduleDTO> simpleScheduleDTOList = privateDateList.stream()
+                .map(privateDate -> new SimpleMyScheduleDTO(privateDate.getLocalDate(), privateDate.getId(), privateDate.getName()))
                 .sorted(
                         Comparator.comparing(simpleSchedule -> simpleSchedule.getLocalDate())
                 )
@@ -94,11 +108,11 @@ public class MemberApiController {
 
         List<Schedule> scheduleList = scheduleService.findByMember(member);
 
-        List<SimpleScheduleDTO2> simpleScheduleDTO2List = scheduleList.stream()
+        List<SimpleScheduleDTO> simpleScheduleDTO2List = scheduleList.stream()
                 .sorted(
                         (o1, o2) -> o1.getCreateLocalDateTime().compareTo(o2.getCreateLocalDateTime()) * -1
                 )
-                .map(schedule -> new SimpleScheduleDTO2(schedule.getName(), schedule.getScheduleKey()))
+                .map(schedule -> new SimpleScheduleDTO(schedule.getName(), schedule.getScheduleKey()))
                 .collect(Collectors.toList());
 
         return new GetMyPageResponseDTO(simpleScheduleDTOList, simpleScheduleDTO2List, true);

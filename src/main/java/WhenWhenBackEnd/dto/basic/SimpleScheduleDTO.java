@@ -2,17 +2,15 @@ package WhenWhenBackEnd.dto.basic;
 
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
 public class SimpleScheduleDTO {
 
     private String ScheduleName;
-    private LocalDate localDate;
+    private String ScheduleKey;
 
-    public SimpleScheduleDTO(String scheduleName, LocalDate localDate) {
+    public SimpleScheduleDTO(String scheduleName, String scheduleKey) {
         ScheduleName = scheduleName;
-        this.localDate = localDate;
+        ScheduleKey = scheduleKey;
     }
 
 }

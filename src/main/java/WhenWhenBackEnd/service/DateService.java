@@ -4,7 +4,6 @@ import WhenWhenBackEnd.domain.Date;
 import WhenWhenBackEnd.domain.MemberSchedule;
 import WhenWhenBackEnd.domain.Schedule;
 import WhenWhenBackEnd.repository.DateRepository;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

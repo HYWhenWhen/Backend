@@ -1,7 +1,6 @@
 package WhenWhenBackEnd.repository;
 
 import WhenWhenBackEnd.domain.*;
-import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;

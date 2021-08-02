@@ -1,14 +1,14 @@
 package WhenWhenBackEnd.dto.member;
 
-import WhenWhenBackEnd.dto.basic.SimpleScheduleDTO;
 import lombok.Data;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 public class AddMyScheduleRequestDTO {
 
     private String idToken;
-    private List<SimpleScheduleDTO> dates;
+    private LocalDate localDate;
+    private String ScheduleName;
 
 }
