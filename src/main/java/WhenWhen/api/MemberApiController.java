@@ -44,7 +44,11 @@ public class MemberApiController {
     public LogInMemberResponseDTO logIn(@RequestBody LogInMemberRequestDTO dto) {
         Member member = memberService.logIn(dto.getIdToken());
 
-        return new LogInMemberResponseDTO(member, member == null ? false : true);
+        if (member == null) {
+            return new LogInMemberResponseDTO(null, null, false);
+        }
+
+        return new LogInMemberResponseDTO(member.getIdToken(), member, member == null ? false : true);
     }
 
     @PostMapping("/add-my-schedule")
@@ -96,7 +100,7 @@ public class MemberApiController {
     public GetMyPageResponseDTO getMyPage(@RequestBody GetMyPageRequestDTO dto) {
         Member member = memberService.findOne(dto.getIdToken());
         if(member == null)
-            return new GetMyPageResponseDTO(false, null);
+            return new GetMyPageResponseDTO(false, null, null);
 
         List<PrivateDate> privateDateList = privateDateService.findByMember(member);
 
@@ -104,7 +108,21 @@ public class MemberApiController {
                 .map(privateDate -> LocalDate.from(privateDate.getLocalDate()))
                 .collect(Collectors.toList());
 
-        return new GetMyPageResponseDTO(true, list);
+        List<Schedule> list2 = scheduleService.findByMember(member);
+        List<SimpleScheduleDTO> list3 = list2.stream()
+                .sorted(
+                        new Comparator<Schedule>() {
+                            @Override
+                            public int compare(Schedule o1, Schedule o2) {
+                                if (o1.getCreateLocalDateTime().isAfter(o2.getCreateLocalDateTime())) return -1;
+                                else return 1;
+                            }
+                        }
+                )
+                .map(schedule -> new SimpleScheduleDTO(schedule.getName(), schedule.getScheduleKey()))
+                .collect(Collectors.toList());
+
+        return new GetMyPageResponseDTO(true, list, list3);
     }
 
     @PostMapping("/get-my-page-modal")
@@ -139,8 +157,6 @@ public class MemberApiController {
 
         schedule.decreaseExpectedMemberCnt();
         if (memberSchedule == null) return new AbandonResponseDTO(true);
-
-        schedule.decreaseJoinedMemberCnt();
 
         dateService.deleteByMemberSchedule(memberSchedule);
         memberScheduleService.delete(memberSchedule);

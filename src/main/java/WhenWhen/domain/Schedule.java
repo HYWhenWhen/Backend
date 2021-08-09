@@ -19,7 +19,7 @@ public class Schedule {
 
     private String scheduleKey;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOST_ID")
     private Member host;
 

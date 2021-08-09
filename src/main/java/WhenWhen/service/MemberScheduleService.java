@@ -16,9 +16,11 @@ import java.util.List;
 public class MemberScheduleService {
 
     private final MemberScheduleRepository memberScheduleRepository;
+    private final ScheduleService scheduleService;
 
     public void save(MemberSchedule memberSchedule) {
-        memberSchedule.getSchedule().increaseJoinedMemberCnt();
+        Schedule schedule = scheduleService.findOne(memberSchedule.getSchedule().getScheduleKey());
+        schedule.increaseJoinedMemberCnt();
 
         memberScheduleRepository.save(memberSchedule);
     }
@@ -30,7 +32,11 @@ public class MemberScheduleService {
     }
 
     public void delete(MemberSchedule memberSchedule) {
+        Schedule schedule = scheduleService.findOne(memberSchedule.getSchedule().getScheduleKey());
+        schedule.decreaseJoinedMemberCnt();
+        
         memberScheduleRepository.delete(memberSchedule);
+
     }
 
     public void deleteBySchedule(Schedule schedule) {

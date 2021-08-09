@@ -62,6 +62,13 @@ public class ScheduleApiController {
         int joinedCnt = memberScheduleService.findBySchedule(schedule).size();
         if(joinedCnt >= schedule.getExpectedMemberCnt())return new SubmitMemberScheduleResponseDTO(false);
 
+        MemberSchedule findMemberSchedule = memberScheduleService.findByMemberAndSchedule(member, schedule);
+
+        if (findMemberSchedule != null) {
+            dateService.deleteByMemberSchedule(findMemberSchedule);
+            memberScheduleService.delete(findMemberSchedule);
+        }
+
         MemberSchedule memberSchedule = new MemberSchedule(member, schedule);
         memberScheduleService.save(memberSchedule);
 

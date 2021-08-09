@@ -12,10 +12,12 @@ public class GetMyPageResponseDTO {
 
     Boolean success;
     List<LocalDate> dates;
+    List<SimpleScheduleDTO> schedules;
 
-    public GetMyPageResponseDTO( Boolean success, List<LocalDate> dates) {
+    public GetMyPageResponseDTO(Boolean success, List<LocalDate> dates, List<SimpleScheduleDTO> schedules) {
         if (success == true) {
             this.dates = dates;
+            this.schedules = schedules;
         }
 
         this.success = success;
