@@ -29,26 +29,29 @@ public class MemberApiController {
     private final MemberScheduleService memberScheduleService;
     private final DateService dateService;
 
-    @PostMapping("/sign-up")
-    public CreateMemberResponseDTO signUp(@RequestBody CreateMemberRequestDTO dto) {
-        if(dto.getNickName().length() <= 0) return new CreateMemberResponseDTO(false);
-
-        Member member = new Member(dto.getIdToken(), dto.getNickName());
-
-        Boolean success = memberService.save(member);
-
-        return new CreateMemberResponseDTO(success);
-    }
+//    @PostMapping("/sign-up")
+//    public CreateMemberResponseDTO signUp(@RequestBody CreateMemberRequestDTO dto) {
+//        if(dto.getNickName().length() <= 0) return new CreateMemberResponseDTO(false);
+//
+//        Member member = new Member(dto.getIdToken(), dto.getNickName());
+//
+//        Boolean success = memberService.save(member);
+//
+//        return new CreateMemberResponseDTO(success);
+//    }
 
     @PostMapping("/log-in")
     public LogInMemberResponseDTO logIn(@RequestBody LogInMemberRequestDTO dto) {
-        Member member = memberService.logIn(dto.getIdToken());
+        Member findMember = memberService.findOne(dto.getIdToken());
 
-        if (member == null) {
-            return new LogInMemberResponseDTO(null, null, false);
+        if (findMember == null) {
+            Member member = new Member(dto.getIdToken(), dto.getNickName());
+            memberService.save(member);
+
+            return new LogInMemberResponseDTO(member.getIdToken(), member.getNickName(), true);
         }
 
-        return new LogInMemberResponseDTO(member.getIdToken(), member, member == null ? false : true);
+        return new LogInMemberResponseDTO(findMember.getIdToken(), findMember.getNickName(), true);
     }
 
     @PostMapping("/add-my-schedule")
@@ -100,7 +103,7 @@ public class MemberApiController {
     public GetMyPageResponseDTO getMyPage(@RequestBody GetMyPageRequestDTO dto) {
         Member member = memberService.findOne(dto.getIdToken());
         if(member == null)
-            return new GetMyPageResponseDTO(false, null, null);
+            return new GetMyPageResponseDTO(false, member.getIdToken(), member.getNickName(),null, null);
 
         List<PrivateDate> privateDateList = privateDateService.findByMember(member);
 
@@ -122,7 +125,7 @@ public class MemberApiController {
                 .map(schedule -> new SimpleScheduleDTO(schedule.getName(), schedule.getScheduleKey()))
                 .collect(Collectors.toList());
 
-        return new GetMyPageResponseDTO(true, list, list3);
+        return new GetMyPageResponseDTO(true, member.getIdToken(), member.getNickName(),list, list3);
     }
 
     @PostMapping("/get-my-page-modal")

@@ -10,12 +10,16 @@ import java.util.List;
 @Data
 public class GetMyPageResponseDTO {
 
+    String idToken;
+    String nickName;
     Boolean success;
     List<LocalDate> dates;
     List<SimpleScheduleDTO> schedules;
 
-    public GetMyPageResponseDTO(Boolean success, List<LocalDate> dates, List<SimpleScheduleDTO> schedules) {
+    public GetMyPageResponseDTO(Boolean success, String idToken, String nickName, List<LocalDate> dates, List<SimpleScheduleDTO> schedules) {
         if (success == true) {
+            this.idToken = idToken;
+            this.nickName = nickName;
             this.dates = dates;
             this.schedules = schedules;
         }
