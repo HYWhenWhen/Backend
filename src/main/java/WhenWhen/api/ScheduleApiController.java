@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://3.34.216.89/")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
