@@ -58,7 +58,7 @@ public class MemberApiController {
     @PostMapping("/add-my-schedule")
     public AddMyScheduleResponseDTO addMySchedule(@RequestBody AddMyScheduleRequestDTO dto) {
         Member member = memberService.findOne(dto.getIdToken());
-        if(member == null)
+        if (member == null)
             return new AddMyScheduleResponseDTO(false);
 
         LocalDate localDate = dto.getLocalDate();
@@ -77,7 +77,7 @@ public class MemberApiController {
 
         PrivateDate privateDate = privateDateService.findOne(dto.getScheduleKey());
 
-        if(member == null || privateDate.getMember() != member)return new DeleteMyScheduleResponseDTO(false);
+        if (member == null || privateDate.getMember() != member) return new DeleteMyScheduleResponseDTO(false);
 
         privateDateService.delete(privateDate);
 
@@ -87,7 +87,7 @@ public class MemberApiController {
     @PostMapping("/get-my-schedule")
     public GetMyScheduleResponseDTO getMySchedule(@RequestBody GetMyScheduleRequestDTO dto) {
         Member member = memberService.findOne(dto.getIdToken());
-        if(member == null)
+        if (member == null)
             return new GetMyScheduleResponseDTO(null, false);
 
         List<PrivateDate> list = privateDateService.findByMember(member);
@@ -103,7 +103,8 @@ public class MemberApiController {
     @PostMapping("/get-my-page")
     public GetMyPageResponseDTO getMyPage(@RequestBody GetMyPageRequestDTO dto) {
         Member member = memberService.findOne(dto.getIdToken());
-        if(member == null)
+        if (member == null)
+
             return new GetMyPageResponseDTO(false, member.getIdToken(), member.getNickName(), null, null);
 
         List<PrivateDate> privateDateList = privateDateService.findByMember(member);
@@ -134,7 +135,7 @@ public class MemberApiController {
         Member member = memberService.findOne(dto.getIdToken());
         LocalDate localDate = dto.getLocalDate();
 
-        if(member == null)
+        if (member == null)
             return new GetMyPageModalResponseDTO(null, false);
 
         List<PrivateDate> privateDateList = privateDateService.findByMember(member);
@@ -155,7 +156,7 @@ public class MemberApiController {
         Member member = memberService.findOne(dto.getIdToken());
         Schedule schedule = scheduleService.findOne(dto.getScheduleKey());
 
-        if(member == null || schedule == null)return new AbandonResponseDTO(false);
+        if (member == null || schedule == null) return new AbandonResponseDTO(false);
 
         MemberSchedule memberSchedule = memberScheduleService.findByMemberAndSchedule(member, schedule);
 
