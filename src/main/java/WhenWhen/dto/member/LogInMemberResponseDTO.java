@@ -10,9 +10,9 @@ public class LogInMemberResponseDTO {
     private String nickName;
     private Boolean success;
 
-    public LogInMemberResponseDTO(String idToken, Member member, Boolean success) {
+    public LogInMemberResponseDTO(String idToken, String nickName, Boolean success) {
         if (success == true) {
-            this.nickName = member.getNickName();
+            this.nickName = nickName;
             this.idToken = idToken;
         }
 
